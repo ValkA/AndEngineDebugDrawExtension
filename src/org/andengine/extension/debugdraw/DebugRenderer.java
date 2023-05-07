@@ -11,7 +11,7 @@ import org.andengine.entity.Entity;
 import org.andengine.extension.physics.box2d.PhysicsConnector;
 import org.andengine.extension.physics.box2d.PhysicsWorld;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
-import org.andengine.util.color.Color;
+import org.andengine.util.adt.color.Color;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -69,6 +69,7 @@ public class DebugRenderer extends Entity {
 		if (isDrawBodies()) {
 			mBodiesActiveSet.clear();
 			mBodiesInactiveSet.clear();
+
 			Iterator<Body> iterator = mWorld.getBodies();
 			while (iterator.hasNext()) {
 				Body body = iterator.next();
@@ -199,8 +200,10 @@ public class DebugRenderer extends Entity {
 		case PulleyJoint:
 		case MouseJoint:
 		case GearJoint:
+		case WheelJoint:
 		case WeldJoint:
 		case FrictionJoint:
+		case RopeJoint:
 			return Color.WHITE;
 
 		case Unknown:
@@ -228,6 +231,10 @@ public class DebugRenderer extends Entity {
 				IRenderOfFixture renderOfFixture;
 				if (fixture.getShape().getType() == Type.Circle) {
 					renderOfFixture = new RenderOfCircleFixture(fixture, pVBO);
+				} else if (fixture.getShape().getType() == Type.Edge) {
+					renderOfFixture = new RenderOfEdgeFixture(fixture, pVBO);
+				} else if (fixture.getShape().getType() == Type.Chain) {
+					renderOfFixture = new RenderOfChainFixture(fixture, pVBO);
 				} else {
 					renderOfFixture = new RenderOfPolyFixture(fixture, pVBO);
 				}
